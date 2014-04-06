@@ -45,9 +45,10 @@ main(int argc, char *argv[])
     /* Change our current working directory to that of the
        crashing process */
 
-    snprintf(cwd, PATH_MAX, "/proc/%s/cwd", argv[1]);
+    // under /proc directory, there are a lot of process directories
+    char path[40];
+    snprintf(cwd, PATH_MAX, "/proc/%s/cwd", argv[1]);    // will be kind of /proc/8929/cwd 
     chdir(cwd);
-
     /* Write output to file "core.info" in that directory */
 
     fp = fopen("core.info", "w+");
@@ -56,7 +57,10 @@ main(int argc, char *argv[])
 
     /* Display command-line arguments given to core_pattern
        pipe program */
-
+    fprintf(fp, "cwd : %s\n", cwd);
+    getcwd(path,40);
+    fprintf(fp, "pwd : %s\n",path);
+    
     fprintf(fp, "argc=%d\n", argc);
     for (j = 0; j < argc; j++)
         fprintf(fp, "argc[%d]=<%s>\n", j, argv[j]);
