@@ -72,7 +72,7 @@ int my_inet_aton(const char *cp, struct in_addr *ap){
 
     /* Normalize the address */
     if (dots < 3) {
-	addr <<= 8 * (3 - dots) ;
+        addr <<= 8 * (3 - dots) ;        // 比如你只写了为形式 192.2.2
     }
 
     printf("before invoking htonl : %lu\n",addr);
