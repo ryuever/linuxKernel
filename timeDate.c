@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
+#include <string.h>
 
 #ifdef __MACH__
 #include <mach/mach_time.h>
@@ -32,7 +33,7 @@ int clock_getres(int clock_id, struct timespec *ts) {
 typedef int clockid_t;
 #endif  
 
-int main(){
+void main(){
   printf("==================================================================\n");
   printf("usage of func time\n");
   printf("==================================================================\n");
@@ -107,5 +108,18 @@ int main(){
     printf("%s\n", buf2);
   printf("\n");
   
-  exit(0);
+  printf("==================================================================\n");
+  printf("usage of func ctime\n");
+  printf("==================================================================\n");
+  struct timeval tv;
+  static char str[30];
+  char *ptr;
+
+  if(gettimeofday(&tv,NULL) < 0)
+      perror("gettimeofday error");
+  ptr = ctime(&tv.tv_sec);
+  strcpy(str,&ptr[11]);
+  snprintf(str +8, sizeof(str) - 8, ".%06d", tv.tv_usec );
+
+  printf("str is %s\n",str);
 }
