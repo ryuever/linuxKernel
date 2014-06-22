@@ -3,6 +3,35 @@
 #include <time.h>
 #include <sys/time.h>
 
+#ifdef __MACH__
+#include <mach/mach_time.h>
+#define CLOCK_REALTIME 0
+#define CLOCK_MONOTONIC 0
+int clock_gettime(int clk_id, struct timespec *t){
+    mach_timebase_info_data_t timebase;
+    mach_timebase_info(&timebase);
+    uint64_t time;
+    time = mach_absolute_time();
+    double nseconds = ((double)time * (double)timebase.numer)/((double)timebase.denom);
+    double seconds = ((double)time * (double)timebase.numer)/((double)timebase.denom * 1e9);
+    t->tv_sec = seconds;
+    t->tv_nsec = nseconds;
+    return 0;
+}
+
+int clock_getres(int clock_id, struct timespec *ts) {
+    ts->tv_sec  = 0;
+    ts->tv_nsec = 1;
+    return 0;
+}
+#else
+#include <time.h>
+#endif
+
+#ifndef clockid_t
+typedef int clockid_t;
+#endif  
+
 int main(){
   printf("==================================================================\n");
   printf("usage of func time\n");
@@ -31,8 +60,8 @@ int main(){
   clockid_t clocks[]= {  
     CLOCK_REALTIME,  
     CLOCK_MONOTONIC,  
-    CLOCK_PROCESS_CPUTIME_ID,  
-    CLOCK_THREAD_CPUTIME_ID,  
+    // CLOCK_PROCESS_CPUTIME_ID,  
+    // CLOCK_THREAD_CPUTIME_ID,  
     (clockid_t) -1,  
   };  
   
@@ -56,7 +85,7 @@ int main(){
   gettimeofday(&tp,NULL);
 
   printf("seconds part   : %zu\n",tp.tv_sec);
-  printf("suseconds part : %zu\n",tp.tv_usec);  
+  printf("suseconds part : %d\n",tp.tv_usec);  
   printf("\n");
   
   printf("==================================================================\n");
