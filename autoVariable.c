@@ -6,19 +6,13 @@
 
 FILE * open_data(char *datafile){
     FILE * fp;
-    char databuf[BUFSIZ];
+    char dbuf[BUFSIZ];
 
     if((fp = fopen(datafile,"rw")) == NULL)
         return (NULL);
-    if(setvbuf(fp, databuf, _IOLBF, BUFSIZ) != 0)
+    if(setvbuf(fp, dbuf, _IOLBF, BUFSIZ) != 0)
         return (NULL);
     return fp;
-}
-
-int cal(int a, int b){                      
-    int z;
-    z = a + b;
-    return z;
 }
 
 int main(){
@@ -27,55 +21,51 @@ int main(){
     size_t len = 0;                             
     ssize_t read = 0;
     int pos;
-    int i = 4;
-    int j = 5;
-    int z;
-    char databuf[BUFSIZ];
+    char c;
+    char databuf[BUFSIZ],databuf2[BUFSIZ];
     //    fp = open_data("autoVariable.txt");
     //    fp2 = open_data("autoVariable2.txt");
 
+    // for testing read with full buffered, write with line buffered
     fp = fopen("autoVariable.txt", "r");
-    /* if(setvbuf(fp, databuf, _IOFBF, BUFSIZ) != 0) */
-    /*     return (NULL); */
-
-    /* fp2 = fopen("autoVariable2.txt", "r"); */
-    /* if(setvbuf(fp2, databuf, _IOFBF, BUFSIZ) != 0) */
-    /*     return (NULL); */
-
-    if(setvbuf(fp, (char *)NULL, _IOLBF, 0) != 0)
+    if(setvbuf(fp, databuf, _IOFBF, BUFSIZ) != 0)
         return (NULL);
-
     fp2 = fopen("autoVariable2.txt", "w");
-    /* if(setvbuf(fp2, (char *)NULL, _IOLBF, 0) != 0) */
-    /*     return (NULL); */
-
-    if(setvbuf(fp2, databuf, _IOFBF, BUFSIZ) != 0)
+    if(setvbuf(fp2, databuf2, _IOLBF, BUFSIZ) != 0)
         return (NULL);
-
-    while ((read = getline(&line, &len, fp)) != -1) {
-        printf("Retrieved line of length %zu from file1 :\n", read);
-        pos = ftell(fp);
-        printf("%d in %s \n", pos, line);
-        fputs(line, fp2);
+    while ((c = fgetc(fp)) != EOF) {
+        printf("Retrieved line of length %c :\n", c);
+        fputc(c, fp2);
     }
-    /* char temp[100]; */
-    /* fgets(temp, 100, fp); */
-    /* fputs(temp,fp2); */
+
+    /* // for testing read with unbuffered, write with line buffered */
+    /* fp = fopen("autoVariable.txt", "r"); */
+    /* if(setvbuf(fp, (char *)NULL, _IONBF, 0) != 0) */
+    /*     return (NULL); */
+    /* fp2 = fopen("autoVariable2.txt", "w"); */
+    /* if(setvbuf(fp2, databuf2, _IOFBF, BUFSIZ) != 0) */
+    /*     return (NULL); */
+    /* while ((c = fgetc(fp)) != EOF) { */
+    /*     printf("Retrieved line of length %c :\n", c); */
+    /*     fputc(c, fp2); */
+    /* } */
+    
+    /* while ((read = getline(&line, &len, stdin)) != -1) { */
+    /*     printf("Retrieved line of length %zu from file1 :\n", read); */
+    /*     //        pos = ftell(fp); */
+    /*     printf("%d in %s \n", pos, line); */
+    /*     fputs(line, fp2); */
+    /* } */
     
     /* char *line_stin; */
     /* line_stin = readline("Enter a line :"); */
     /* printf("The readline is %s \n", line_stin); */
-    
-    z= cal(i,j);
-    printf("z is %d\n", z);
 
-    while ((read = getline(&line, &len, fp2)) != -1) {
-        printf("Retrieved line of length %zu :\n", read);
-        pos = ftell(fp2);
-        printf("%d in %s", pos, line);
-    }
-
-
+    /* while ((read = getline(&line, &len, fp2)) != -1) { */
+    /*     printf("Retrieved line of length %zu :\n", read); */
+    /*     pos = ftell(fp2); */
+    /*     printf("%d in %s", pos, line); */
+    /* } */
     
     fclose(fp);
     fclose(fp2);
