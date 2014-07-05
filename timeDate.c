@@ -1,3 +1,8 @@
+//*************************************************************************************
+//  call time to get current calendar time.
+//  call localtime to convert it to a broken down time
+//  call strftime to format the result.
+//*************************************************************************************
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -33,7 +38,7 @@ int clock_getres(int clock_id, struct timespec *ts) {
 typedef int clockid_t;
 #endif  
 
-void main(){
+int main(){
   printf("==================================================================\n");
   printf("usage of func time\n");
   printf("==================================================================\n");
@@ -122,4 +127,6 @@ void main(){
   snprintf(str +8, sizeof(str) - 8, ".%06d", tv.tv_usec );
 
   printf("str is %s\n",str);
+
+  return 0;
 }

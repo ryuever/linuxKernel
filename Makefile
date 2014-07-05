@@ -1,5 +1,6 @@
-PROGS = fork timeDate wait core_pattern_pipe_test
+PROGS = fork inet_pton IPConversion timeDate
 CFLAGS = -g
+CC = clang
 
 all: $(PROGS) error.o
 
