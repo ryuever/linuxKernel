@@ -1,4 +1,4 @@
-PROGS = fork inet_pton IPConversion timeDate
+PROGS = fork inet_pton IPConversion timeDate reentrantFunc
 CFLAGS = -g
 CC = clang
 
